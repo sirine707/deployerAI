@@ -10,10 +10,10 @@ body {
 .galaxy-bg {
   background-color: hsl(var(--background)); /* Base dark color */
   background-image:
-    /* Subtle Nebula effect 1 */
-    radial-gradient(ellipse at 30% 20%, hsla(270, 50%, 30%, 0.25) 0%, transparent 50%),
-    /* Subtle Nebula effect 2 */
-    radial-gradient(ellipse at 70% 80%, hsla(190, 50%, 40%, 0.2) 0%, transparent 45%),
+    /* Vibrant Purple Nebula effect */
+    radial-gradient(ellipse at 30% 20%, hsla(280, 70%, 45%, 0.3) 0%, transparent 50%),
+    /* Vibrant Blue Nebula effect */
+    radial-gradient(ellipse at 70% 80%, hsla(230, 70%, 50%, 0.25) 0%, transparent 45%),
     /* Star layer 1 (small stars) - Increased density */
     radial-gradient(1px 1px at 10% 30%, white, transparent),
     radial-gradient(1px 1px at 80% 10%, white, transparent),
