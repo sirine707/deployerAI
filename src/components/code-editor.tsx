@@ -9,7 +9,8 @@ import { Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 
-// Debounce hook
+// Debounce hook - Removed as automatic suggestions are disabled
+/*
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
@@ -20,18 +21,20 @@ function useDebounce<T>(value: T, delay: number): T {
 
   return debouncedValue;
 }
+*/
 
 export function CodeEditor() {
   const [code, setCode] = useState<string>('');
   const [lineNumbers, setLineNumbers] = useState<string>('1');
   const [suggestion, setSuggestion] = useState<string | null>(null);
   const [isLoadingSuggestion, setIsLoadingSuggestion] = useState<boolean>(false);
-  const [isSuggestionApplied, setIsSuggestionApplied] = useState<boolean>(false);
+  const [isSuggestionApplied, setIsSuggestionApplied] = useState<boolean>(false); // Keep track if the last suggestion was applied via Tab
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  const debouncedCode = useDebounce(code, 500); // Debounce API calls by 500ms
+  // Debounced code is removed as automatic suggestions are disabled
+  // const debouncedCode = useDebounce(code, 500);
 
   const updateLineNumbers = useCallback((currentCode: string) => {
     const lines = currentCode.split('\n');
@@ -43,30 +46,29 @@ export function CodeEditor() {
     const newCode = event.target.value;
     setCode(newCode);
     updateLineNumbers(newCode);
-    setSuggestion(null); // Clear old suggestion on code change
-    setIsSuggestionApplied(false); // Reset applied state
+    // Clear suggestion and reset applied state if user types something
+    // (In case a suggestion was manually triggered and is now stale)
+    if (!isSuggestionApplied) {
+        setSuggestion(null);
+    }
+    setIsSuggestionApplied(false);
   };
 
+  // Manual suggestion fetching function (could be triggered by a button in the future)
+  // Kept the core logic but it's not called automatically anymore.
   const fetchSuggestion = useCallback(async (currentCode: string) => {
-    if (!currentCode.trim() || isSuggestionApplied) return; // Don't fetch if empty or suggestion already applied
+    if (!currentCode.trim()) return;
 
     setIsLoadingSuggestion(true);
-    setSuggestion(null); // Clear previous suggestion immediately
+    setSuggestion(null); // Clear previous suggestion
 
     try {
       const result = await aiAutocomplete({ codePrefix: currentCode });
-      // Only set suggestion if the code hasn't changed since the request started
-      // and the suggestion is different from the current code
       if (result.suggestion && result.suggestion.trim() && result.suggestion !== currentCode.split('\n').pop()?.trim()) {
-         setCode(prevCode => {
-            if(prevCode === currentCode) { // Check if code changed during fetch
-               setSuggestion(result.suggestion);
-               return prevCode;
-            }
-            return prevCode; // Code changed, discard suggestion
-         });
+        // Set suggestion only if it's valid and different from the last typed part
+        setSuggestion(result.suggestion);
       } else {
-         setSuggestion(null); // No valid suggestion
+        setSuggestion(null); // No valid suggestion
       }
     } catch (error) {
       console.error('Error fetching AI suggestion:', error);
@@ -75,30 +77,26 @@ export function CodeEditor() {
         description: "Failed to fetch AI suggestion.",
         variant: "destructive",
       });
-       setSuggestion(null); // Clear suggestion on error
+      setSuggestion(null); // Clear suggestion on error
     } finally {
-      // Ensure loading state is reset only if code hasn't changed during fetch
-       setCode(prevCode => {
-          if (prevCode === currentCode) {
-             setIsLoadingSuggestion(false);
-          }
-          return prevCode;
-       });
-    }
-  }, [isSuggestionApplied, toast]);
-
-
-  // Fetch suggestion when debounced code changes
-  useEffect(() => {
-    if (debouncedCode) {
-      fetchSuggestion(debouncedCode);
-    } else {
-      setSuggestion(null); // Clear suggestion if code is empty
       setIsLoadingSuggestion(false);
     }
-  }, [debouncedCode, fetchSuggestion]);
+  }, [toast]); // Removed dependency on isSuggestionApplied as fetch is not automatic
+
+  // Remove the useEffect that automatically fetched suggestions based on debouncedCode
+  /*
+  useEffect(() => {
+    if (debouncedCode && !isSuggestionApplied) { // Check isSuggestionApplied here
+      fetchSuggestion(debouncedCode);
+    } else {
+      setSuggestion(null); // Clear suggestion if code is empty or suggestion applied
+      setIsLoadingSuggestion(false);
+    }
+  }, [debouncedCode, fetchSuggestion, isSuggestionApplied]);
+  */
 
    const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Allow applying suggestion with Tab if a suggestion exists (e.g., manually triggered)
     if (event.key === 'Tab' && suggestion && !isLoadingSuggestion) {
       event.preventDefault(); // Prevent default tab behavior
       const currentCode = code;
@@ -118,8 +116,8 @@ export function CodeEditor() {
              syncScroll(); // Ensure scroll sync after update
          }
        });
-    } else if (event.key !== 'Tab') {
-        // Allow fetching new suggestion if user types something else
+    } else {
+        // Any other key press resets the 'applied' state, allowing manual fetch/display again
         setIsSuggestionApplied(false);
     }
    };
@@ -169,7 +167,7 @@ export function CodeEditor() {
           rows={10} // Initial rows, will adjust
           style={{ minHeight: '200px' }} // Ensure minimum height
         />
-        {/* Suggestion Overlay */}
+        {/* Suggestion Overlay - Will only show if suggestion state is populated manually */}
         {suggestion && !isLoadingSuggestion && code.length > 0 && (
           <div className="absolute left-2 right-2 bottom-2 p-2 bg-muted/80 backdrop-blur-sm text-muted-foreground rounded-md text-xs flex items-center justify-between animate-in fade-in duration-300"> {/* Added backdrop-blur and slight transparency */}
              <span className="flex items-center">
@@ -178,7 +176,7 @@ export function CodeEditor() {
             <span className="text-xs font-semibold">[Tab] to accept</span>
           </div>
         )}
-        {/* Loading Indicator */}
+        {/* Loading Indicator - Will only show if isLoadingSuggestion is true (manual trigger) */}
         {isLoadingSuggestion && code.length > 0 && (
            <div className="absolute left-2 right-2 bottom-2 p-2 bg-muted/80 backdrop-blur-sm text-muted-foreground rounded-md text-xs flex items-center animate-in fade-in duration-300"> {/* Added backdrop-blur and slight transparency */}
             <Loader2 className="w-3 h-3 mr-1 animate-spin" /> Fetching suggestion...
