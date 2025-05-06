@@ -47,35 +47,75 @@ body {
     400px 400px,
     600px 600px,
     700px 700px;
-  background-position:
-    0% 0%, /* Nebulas */
-    0% 0%,
-    0px 0px, /* Small stars */
-    50px 50px,
-    100px 100px,
-    150px 150px,
-    20px 80px,
-    70px 30px,
-    120px 180px,
-    180px 70px,
-    40px 140px,
-    90px 90px,
-    0px 0px, /* Larger stars */
-    200px 200px,
-    400px 100px,
-    100px 350px;
+  background-position: /* Initial positions set by animation */
+    0% 0%, 0% 0%, 0px 0px, 50px 50px, 100px 100px, 150px 150px, 20px 80px, 70px 30px, 120px 180px, 180px 70px, 40px 140px, 90px 90px, 0px 0px, 200px 200px, 400px 100px, 100px 350px;
   background-repeat: no-repeat, no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat;
   background-attachment: fixed; /* Keep background fixed during scroll */
-  animation: floatingGalaxy 120s linear infinite; /* Slow floating animation */
+  animation: floatingGalaxy 150s linear infinite; /* Slow floating animation */
 }
 
 
 @keyframes floatingGalaxy {
-  0% { background-position: 0% 0%, 0% 0%, 0px 0px, 50px 50px, 100px 100px, 150px 150px, 20px 80px, 70px 30px, 120px 180px, 180px 70px, 40px 140px, 90px 90px, 0px 0px, 200px 200px, 400px 100px, 100px 350px; }
-  50% { background-position: 0% 0%, 0% 0%, 100px 50px, 100px 0px, 50px 150px, 200px 100px, 70px 130px, 120px 80px, 170px 230px, 230px 120px, 90px 190px, 140px 140px, 250px 500px, 400px 400px, 600px 300px, 300px 700px; }
-  100% { background-position: 0% 0%, 0% 0%, 0px 0px, 50px 50px, 100px 100px, 150px 150px, 20px 80px, 70px 30px, 120px 180px, 180px 70px, 40px 140px, 90px 90px, 0px 0px, 200px 200px, 400px 100px, 100px 350px; }
+  0% {
+    background-position:
+      0% 0%, /* Nebula 1 - static */
+      0% 0%, /* Nebula 2 - static */
+      0px 0px,    /* Star layer 1 */
+      50px 50px,   /* Star layer 2 */
+      100px 100px, /* Star layer 3 */
+      150px 150px, /* Star layer 4 */
+      20px 80px,   /* Star layer 5 */
+      70px 30px,   /* Star layer 6 */
+      120px 180px, /* Star layer 7 */
+      180px 70px,  /* Star layer 8 */
+      40px 140px,  /* Star layer 9 */
+      90px 90px,   /* Star layer 10 */
+      0px 0px,    /* Brighter Star 1 */
+      200px 200px, /* Brighter Star 2 */
+      400px 100px, /* Brighter Star 3 */
+      100px 350px; /* Brighter Star 4 */
+  }
+  50% {
+    background-position:
+      0% 0%, /* Nebula 1 - static */
+      0% 0%, /* Nebula 2 - static */
+      /* Move smaller stars faster/differently */
+      150px 50px,  /* Star layer 1 */
+      -50px 100px, /* Star layer 2 */
+      100px 200px, /* Star layer 3 */
+      50px -50px,  /* Star layer 4 */
+      120px 180px, /* Star layer 5 */
+      -30px 80px,  /* Star layer 6 */
+      220px 50px,  /* Star layer 7 */
+      80px 200px,  /* Star layer 8 */
+      140px 40px,  /* Star layer 9 */
+      190px 190px, /* Star layer 10 */
+      /* Move brighter stars slower/differently */
+      100px 100px, /* Brighter Star 1 */
+      300px 150px, /* Brighter Star 2 */
+      350px 300px, /* Brighter Star 3 */
+      200px 250px; /* Brighter Star 4 */
+  }
+  100% {
+    background-position: /* Return to initial state */
+      0% 0%,
+      0% 0%,
+      0px 0px,
+      50px 50px,
+      100px 100px,
+      150px 150px,
+      20px 80px,
+      70px 30px,
+      120px 180px,
+      180px 70px,
+      40px 140px,
+      90px 90px,
+      0px 0px,
+      200px 200px,
+      400px 100px,
+      100px 350px;
+  }
 }
-
 
 
 @layer base {
