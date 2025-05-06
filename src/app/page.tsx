@@ -1,12 +1,18 @@
 
 import { CodeEditor } from '@/components/code-editor';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { LanguageSelector } from '@/components/language-selector'; // Import the new component
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:p-12"> {/* Removed bg-background */}
-      <div className="w-full max-w-4xl">
-        <h1 className="text-3xl font-bold mb-6 text-center font-mono text-primary">
+      <div className="w-full max-w-4xl relative"> {/* Added relative positioning */}
+        {/* Position the LanguageSelector in the top right */}
+        <div className="absolute top-0 right-0 z-10 mb-4">
+          <LanguageSelector />
+        </div>
+
+        <h1 className="text-3xl font-bold mb-6 pt-12 text-center font-mono text-primary"> {/* Added padding-top to avoid overlap */}
           Code Weaver <span className="text-foreground">::</span> AI Editor
         </h1>
         <Card className="w-full shadow-lg border-accent bg-card/80 backdrop-blur-sm"> {/* Add slight transparency and blur to card */}
