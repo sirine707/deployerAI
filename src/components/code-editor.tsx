@@ -148,29 +148,30 @@ export function CodeEditor() {
    }, [code]); // Re-run when code changes
 
   return (
-    <div className="flex h-full w-full rounded-md border bg-card text-card-foreground shadow-sm overflow-hidden">
+    // Use bg-inherit to make the container transparent, relying on Card's background
+    <div className="flex h-full w-full rounded-md border border-transparent bg-inherit text-card-foreground shadow-sm overflow-hidden">
       <div
         ref={lineNumbersRef}
-        className="line-numbers bg-background p-2 border-r w-16 overflow-y-hidden" // Match padding-top/bottom roughly with textarea
+        className="line-numbers bg-inherit p-2 border-r w-16 overflow-y-hidden" // Match padding-top/bottom roughly with textarea, inherit background
         style={{ paddingTop: '10px', paddingBottom: '10px' }} // Explicit padding
       >
         {lineNumbers}
       </div>
-      <div className="relative flex-1 p-2"> {/* Added padding to match line numbers */}
+      <div className="relative flex-1 p-2 bg-inherit"> {/* Added padding to match line numbers, inherit background */}
         <Textarea
           ref={textAreaRef}
           value={code}
           onChange={handleCodeChange}
           onKeyDown={handleKeyDown}
           placeholder="Start typing your code here..."
-          className="code-editor-textarea w-full h-full block " // Ensure block display
+          className="code-editor-textarea w-full h-full block bg-inherit" // Ensure block display, inherit background
           spellCheck="false" // Disable spellcheck for code
           rows={10} // Initial rows, will adjust
           style={{ minHeight: '200px' }} // Ensure minimum height
         />
         {/* Suggestion Overlay */}
         {suggestion && !isLoadingSuggestion && code.length > 0 && (
-          <div className="absolute left-2 right-2 bottom-2 p-2 bg-muted text-muted-foreground rounded-md text-xs flex items-center justify-between animate-in fade-in duration-300">
+          <div className="absolute left-2 right-2 bottom-2 p-2 bg-muted/80 backdrop-blur-sm text-muted-foreground rounded-md text-xs flex items-center justify-between animate-in fade-in duration-300"> {/* Added backdrop-blur and slight transparency */}
              <span className="flex items-center">
               <Sparkles className="w-3 h-3 mr-1 text-primary" /> AI Suggestion: <code className="ml-1 font-mono bg-background/50 px-1 py-0.5 rounded">{suggestion}</code>
              </span>
@@ -179,7 +180,7 @@ export function CodeEditor() {
         )}
         {/* Loading Indicator */}
         {isLoadingSuggestion && code.length > 0 && (
-           <div className="absolute left-2 right-2 bottom-2 p-2 bg-muted text-muted-foreground rounded-md text-xs flex items-center animate-in fade-in duration-300">
+           <div className="absolute left-2 right-2 bottom-2 p-2 bg-muted/80 backdrop-blur-sm text-muted-foreground rounded-md text-xs flex items-center animate-in fade-in duration-300"> {/* Added backdrop-blur and slight transparency */}
             <Loader2 className="w-3 h-3 mr-1 animate-spin" /> Fetching suggestion...
            </div>
         )}

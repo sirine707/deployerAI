@@ -6,6 +6,78 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+/* Galaxy Background */
+.galaxy-bg {
+  background-color: hsl(var(--background)); /* Base dark color */
+  background-image:
+    /* Subtle Nebula effect 1 */
+    radial-gradient(ellipse at 30% 20%, hsla(270, 50%, 30%, 0.25) 0%, transparent 50%),
+    /* Subtle Nebula effect 2 */
+    radial-gradient(ellipse at 70% 80%, hsla(190, 50%, 40%, 0.2) 0%, transparent 45%),
+    /* Star layer 1 (small stars) - Increased density */
+    radial-gradient(1px 1px at 10% 30%, white, transparent),
+    radial-gradient(1px 1px at 80% 10%, white, transparent),
+    radial-gradient(1px 1px at 50% 50%, white, transparent),
+    radial-gradient(1px 1px at 25% 75%, white, transparent),
+    radial-gradient(1px 1px at 90% 60%, white, transparent),
+    radial-gradient(1px 1px at 5% 95%, white, transparent),
+    radial-gradient(1px 1px at 65% 45%, white, transparent),
+    radial-gradient(1px 1px at 35% 85%, white, transparent),
+    radial-gradient(1px 1px at 15% 55%, white, transparent),
+    radial-gradient(1px 1px at 85% 35%, white, transparent),
+    /* Star layer 2 (slightly larger/brighter stars) */
+    radial-gradient(1.5px 1.5px at 40% 60%, hsla(0, 0%, 100%, 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 60% 25%, hsla(0, 0%, 100%, 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 15% 5%, hsla(0, 0%, 100%, 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 85% 90%, hsla(0, 0%, 100%, 0.8), transparent);
+  background-size:
+    100% 100%, /* Nebulas */
+    100% 100%,
+    200px 200px, /* Small stars pattern size */
+    300px 300px,
+    250px 250px,
+    180px 180px,
+    220px 220px,
+    350px 350px,
+    150px 150px,
+    280px 280px,
+    190px 190px,
+    310px 310px,
+    500px 500px, /* Larger stars pattern size */
+    400px 400px,
+    600px 600px,
+    700px 700px;
+  background-position:
+    0% 0%, /* Nebulas */
+    0% 0%,
+    0px 0px, /* Small stars */
+    50px 50px,
+    100px 100px,
+    150px 150px,
+    20px 80px,
+    70px 30px,
+    120px 180px,
+    180px 70px,
+    40px 140px,
+    90px 90px,
+    0px 0px, /* Larger stars */
+    200px 200px,
+    400px 100px,
+    100px 350px;
+  background-repeat: no-repeat, no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat;
+  background-attachment: fixed; /* Keep background fixed during scroll */
+  animation: floatingGalaxy 120s linear infinite; /* Slow floating animation */
+}
+
+
+@keyframes floatingGalaxy {
+  0% { background-position: 0% 0%, 0% 0%, 0px 0px, 50px 50px, 100px 100px, 150px 150px, 20px 80px, 70px 30px, 120px 180px, 180px 70px, 40px 140px, 90px 90px, 0px 0px, 200px 200px, 400px 100px, 100px 350px; }
+  50% { background-position: 0% 0%, 0% 0%, 100px 50px, 100px 0px, 50px 150px, 200px 100px, 70px 130px, 120px 80px, 170px 230px, 230px 120px, 90px 190px, 140px 140px, 250px 500px, 400px 400px, 600px 300px, 300px 700px; }
+  100% { background-position: 0% 0%, 0% 0%, 0px 0px, 50px 50px, 100px 100px, 150px 150px, 20px 80px, 70px 30px, 120px 180px, 180px 70px, 40px 140px, 90px 90px, 0px 0px, 200px 200px, 400px 100px, 100px 350px; }
+}
+
+
+
 @layer base {
   :root {
     /* Light Theme (Keep for potential future use, but dark is default) */
@@ -34,76 +106,76 @@ body {
     --chart-4-light: 43 74% 66%;
     --chart-5-light: 27 87% 67%;
 
-    /* Dark Theme (Default) */
-    --background: 0 0% 11.8%; /* #1E1E1E */
+    /* Dark Theme (Default) - Adjusted for Galaxy */
+    --background: 240 10% 3.9%; /* Very dark blue/black */
     --foreground: 0 0% 83.1%; /* #D4D4D4 */
-    --card: 0 0% 11.8%; /* #1E1E1E */
+    --card: 240 8% 8%; /* Slightly lighter dark blue for cards */
     --card-foreground: 0 0% 83.1%; /* #D4D4D4 */
-    --popover: 0 0% 11.8%; /* #1E1E1E */
+    --popover: 240 8% 8%; /* Match card background */
     --popover-foreground: 0 0% 83.1%; /* #D4D4D4 */
-    --primary: 180 100% 25.1%; /* #008080 Teal */
+    --primary: 180 100% 35%; /* Brighter Teal for contrast */
     --primary-foreground: 0 0% 95%; /* Lighter for contrast on Teal */
-    --secondary: 0 0% 15%; /* Slightly lighter dark */
+    --secondary: 240 5% 15%; /* Slightly lighter dark blue/gray */
     --secondary-foreground: 0 0% 83.1%; /* #D4D4D4 */
-    --muted: 0 0% 15%; /* Slightly lighter dark */
+    --muted: 240 5% 15%; /* Match secondary */
     --muted-foreground: 0 0% 50%; /* Dimmer gray */
-    --accent: 180 100% 25.1%; /* #008080 Teal */
+    --accent: 180 100% 35%; /* Brighter Teal */
     --accent-foreground: 0 0% 95%; /* Lighter for contrast on Teal */
     --destructive: 0 72.2% 50.6%; /* A suitable red for dark mode */
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 25%; /* Darker border */
-    --input: 0 0% 20%; /* Dark input */
-    --ring: 180 100% 25.1%; /* #008080 Teal */
+    --border: 240 5% 25%; /* Darker border */
+    --input: 240 5% 20%; /* Dark input */
+    --ring: 180 100% 35%; /* Brighter Teal */
     --chart-1: 180 70% 50%;
     --chart-2: 200 60% 45%;
     --chart-3: 220 80% 55%;
     --chart-4: 160 65% 60%;
     --chart-5: 190 75% 55%;
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 10%; /* Darker sidebar */
+    --sidebar-background: 240 8% 6%; /* Slightly darker sidebar */
     --sidebar-foreground: 0 0% 83.1%; /* #D4D4D4 */
-    --sidebar-primary: 180 100% 25.1%; /* Teal */
+    --sidebar-primary: 180 100% 35%; /* Brighter Teal */
     --sidebar-primary-foreground: 0 0% 95%;
-    --sidebar-accent: 0 0% 15%; /* Slightly lighter dark */
+    --sidebar-accent: 240 5% 15%; /* Match secondary */
     --sidebar-accent-foreground: 0 0% 83.1%; /* #D4D4D4 */
-    --sidebar-border: 0 0% 25%; /* Darker border */
-    --sidebar-ring: 180 100% 25.1%; /* Teal */
+    --sidebar-border: 240 5% 25%; /* Darker border */
+    --sidebar-ring: 180 100% 35%; /* Brighter Teal */
   }
 
   /* Explicitly set dark mode variables if .dark class is present */
   .dark {
-    --background: 0 0% 11.8%; /* #1E1E1E */
+    --background: 240 10% 3.9%; /* Very dark blue/black */
     --foreground: 0 0% 83.1%; /* #D4D4D4 */
-    --card: 0 0% 11.8%; /* #1E1E1E */
+    --card: 240 8% 8%; /* Slightly lighter dark blue for cards */
     --card-foreground: 0 0% 83.1%; /* #D4D4D4 */
-    --popover: 0 0% 11.8%; /* #1E1E1E */
+    --popover: 240 8% 8%; /* Match card background */
     --popover-foreground: 0 0% 83.1%; /* #D4D4D4 */
-    --primary: 180 100% 25.1%; /* #008080 Teal */
+    --primary: 180 100% 35%; /* Brighter Teal for contrast */
     --primary-foreground: 0 0% 95%; /* Lighter for contrast on Teal */
-    --secondary: 0 0% 15%; /* Slightly lighter dark */
+    --secondary: 240 5% 15%; /* Slightly lighter dark blue/gray */
     --secondary-foreground: 0 0% 83.1%; /* #D4D4D4 */
-    --muted: 0 0% 15%; /* Slightly lighter dark */
+    --muted: 240 5% 15%; /* Match secondary */
     --muted-foreground: 0 0% 50%; /* Dimmer gray */
-    --accent: 180 100% 25.1%; /* #008080 Teal */
+    --accent: 180 100% 35%; /* Brighter Teal */
     --accent-foreground: 0 0% 95%; /* Lighter for contrast on Teal */
     --destructive: 0 72.2% 50.6%; /* A suitable red for dark mode */
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 25%; /* Darker border */
-    --input: 0 0% 20%; /* Dark input */
-    --ring: 180 100% 25.1%; /* #008080 Teal */
+    --border: 240 5% 25%; /* Darker border */
+    --input: 240 5% 20%; /* Dark input */
+    --ring: 180 100% 35%; /* Brighter Teal */
     --chart-1: 180 70% 50%;
     --chart-2: 200 60% 45%;
     --chart-3: 220 80% 55%;
     --chart-4: 160 65% 60%;
     --chart-5: 190 75% 55%;
-    --sidebar-background: 0 0% 10%; /* Darker sidebar */
+    --sidebar-background: 240 8% 6%; /* Slightly darker sidebar */
     --sidebar-foreground: 0 0% 83.1%; /* #D4D4D4 */
-    --sidebar-primary: 180 100% 25.1%; /* Teal */
+    --sidebar-primary: 180 100% 35%; /* Brighter Teal */
     --sidebar-primary-foreground: 0 0% 95%;
-    --sidebar-accent: 0 0% 15%; /* Slightly lighter dark */
+    --sidebar-accent: 240 5% 15%; /* Match secondary */
     --sidebar-accent-foreground: 0 0% 83.1%; /* #D4D4D4 */
-    --sidebar-border: 0 0% 25%; /* Darker border */
-    --sidebar-ring: 180 100% 25.1%; /* Teal */
+    --sidebar-border: 240 5% 25%; /* Darker border */
+    --sidebar-ring: 180 100% 35%; /* Brighter Teal */
   }
 }
 
@@ -112,7 +184,7 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground galaxy-bg; /* Apply galaxy background */
     /* Ensure dark theme is applied by default */
     color-scheme: dark;
   }
