@@ -209,7 +209,7 @@ export default function Home() {
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="flex min-h-screen bg-background">
+      <div className="flex min-h-screen"> {/* Removed bg-background */}
         <Sidebar collapsible="icon" className="border-r" side="left">
           <SidebarRail />
           <SidebarHeader className="p-2 flex justify-center items-center group-data-[state=collapsed]:justify-center">
