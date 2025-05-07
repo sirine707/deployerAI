@@ -9,66 +9,53 @@ import { Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 
-// Debounce hook - Removed as automatic suggestions are disabled
-/*
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedValue(value), delay);
-    return () => clearTimeout(timer);
-  }, [value, delay]);
-
-  return debouncedValue;
+interface CodeEditorProps {
+  value: string;
+  onValueChange: (value: string) => void;
 }
-*/
 
-export function CodeEditor() {
-  const [code, setCode] = useState<string>('');
+export function CodeEditor({ value, onValueChange }: CodeEditorProps) {
   const [lineNumbers, setLineNumbers] = useState<string>('1');
   const [suggestion, setSuggestion] = useState<string | null>(null);
   const [isLoadingSuggestion, setIsLoadingSuggestion] = useState<boolean>(false);
-  const [isSuggestionApplied, setIsSuggestionApplied] = useState<boolean>(false); // Keep track if the last suggestion was applied via Tab
+  const [isSuggestionApplied, setIsSuggestionApplied] = useState<boolean>(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  // Debounced code is removed as automatic suggestions are disabled
-  // const debouncedCode = useDebounce(code, 500);
-
   const updateLineNumbers = useCallback((currentCode: string) => {
-    const lines = currentCode.split('\n');
+    const lines = currentCode.split('');
     const count = lines.length;
-    setLineNumbers(Array.from({ length: count }, (_, i) => i + 1).join('\n'));
-  }, []);
+    setLineNumbers(Array.from({ length: count }, (_, i) => i + 1).join('')); }, []);
+
+  useEffect(() => {
+      // Update line numbers when the external value changes
+      updateLineNumbers(value);
+  }, [value, updateLineNumbers]);
 
   const handleCodeChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const newCode = event.target.value;
-    setCode(newCode);
-    updateLineNumbers(newCode);
+    onValueChange(newCode); // Use onValueChange prop
     // Clear suggestion and reset applied state if user types something
-    // (In case a suggestion was manually triggered and is now stale)
     if (!isSuggestionApplied) {
         setSuggestion(null);
     }
     setIsSuggestionApplied(false);
   };
 
-  // Manual suggestion fetching function (could be triggered by a button in the future)
-  // Kept the core logic but it's not called automatically anymore.
+  // Manual suggestion fetching function
   const fetchSuggestion = useCallback(async (currentCode: string) => {
     if (!currentCode.trim()) return;
 
     setIsLoadingSuggestion(true);
-    setSuggestion(null); // Clear previous suggestion
+    setSuggestion(null);
 
     try {
       const result = await aiAutocomplete({ codePrefix: currentCode });
-      if (result.suggestion && result.suggestion.trim() && result.suggestion !== currentCode.split('\n').pop()?.trim()) {
-        // Set suggestion only if it's valid and different from the last typed part
+      if (result.suggestion && result.suggestion.trim() && result.suggestion !== currentCode.split('').pop()?.trim()) {
         setSuggestion(result.suggestion);
       } else {
-        setSuggestion(null); // No valid suggestion
+        setSuggestion(null);
       }
     } catch (error) {
       console.error('Error fetching AI suggestion:', error);
@@ -77,47 +64,31 @@ export function CodeEditor() {
         description: "Failed to fetch AI suggestion.",
         variant: "destructive",
       });
-      setSuggestion(null); // Clear suggestion on error
+      setSuggestion(null);
     } finally {
       setIsLoadingSuggestion(false);
     }
-  }, [toast]); // Removed dependency on isSuggestionApplied as fetch is not automatic
-
-  // Remove the useEffect that automatically fetched suggestions based on debouncedCode
-  /*
-  useEffect(() => {
-    if (debouncedCode && !isSuggestionApplied) { // Check isSuggestionApplied here
-      fetchSuggestion(debouncedCode);
-    } else {
-      setSuggestion(null); // Clear suggestion if code is empty or suggestion applied
-      setIsLoadingSuggestion(false);
-    }
-  }, [debouncedCode, fetchSuggestion, isSuggestionApplied]);
-  */
+  }, [toast]);
 
    const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    // Allow applying suggestion with Tab if a suggestion exists (e.g., manually triggered)
     if (event.key === 'Tab' && suggestion && !isLoadingSuggestion) {
-      event.preventDefault(); // Prevent default tab behavior
-      const currentCode = code;
-      const lastLine = currentCode.split('\n').pop() || '';
-      const indent = lastLine.match(/^\s*/)?.[0] || ''; // Preserve indentation
-      const newCode = currentCode + '\n' + indent + suggestion;
-      setCode(newCode);
-      updateLineNumbers(newCode);
-      setSuggestion(null); // Clear suggestion after applying
-      setIsSuggestionApplied(true); // Mark suggestion as applied
+      event.preventDefault();
+      const currentCode = value; // Use value prop
+      const lastLine = currentCode.split('').pop() || '';
+      const indent = lastLine.match(/^\s*/)?.[0] || '';
+      const newCode = currentCode + '' + indent + suggestion;
+      onValueChange(newCode); // Use onValueChange prop
+      setSuggestion(null);
+      setIsSuggestionApplied(true);
 
-      // Move cursor to the end of the newly added line
        requestAnimationFrame(() => {
          if (textAreaRef.current) {
              textAreaRef.current.selectionStart = textAreaRef.current.selectionEnd = newCode.length;
-             textAreaRef.current.focus(); // Refocus
-             syncScroll(); // Ensure scroll sync after update
+             textAreaRef.current.focus();
+             syncScroll();
          }
        });
     } else {
-        // Any other key press resets the 'applied' state, allowing manual fetch/display again
         setIsSuggestionApplied(false);
     }
    };
@@ -136,49 +107,46 @@ export function CodeEditor() {
      }
    }, []);
 
-   // Adjust textarea height dynamically
+   // Adjust textarea height dynamically based on the external value
    useEffect(() => {
      if (textAreaRef.current) {
-       textAreaRef.current.style.height = 'auto'; // Reset height
+       textAreaRef.current.style.height = 'auto';
        textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
-       syncScroll(); // Sync scroll after height adjustment
+       syncScroll();
      }
-   }, [code]); // Re-run when code changes
+   }, [value]); // Re-run when value changes
 
   return (
-    // Use bg-inherit to make the container transparent, relying on Card's background
     <div className="flex h-full w-full rounded-md border border-transparent bg-inherit text-card-foreground shadow-sm overflow-hidden">
       <div
         ref={lineNumbersRef}
-        className="line-numbers bg-inherit p-2 border-r w-16 overflow-y-hidden" // Match padding-top/bottom roughly with textarea, inherit background
-        style={{ paddingTop: '10px', paddingBottom: '10px' }} // Explicit padding
+        className="line-numbers bg-inherit p-2 border-r w-16 overflow-y-hidden"
+        style={{ paddingTop: '10px', paddingBottom: '10px' }}
       >
         {lineNumbers}
       </div>
-      <div className="relative flex-1 p-2 bg-inherit"> {/* Added padding to match line numbers, inherit background */}
+      <div className="relative flex-1 p-2 bg-inherit">
         <Textarea
           ref={textAreaRef}
-          value={code}
+          value={value} // Use value prop
           onChange={handleCodeChange}
           onKeyDown={handleKeyDown}
           placeholder="Start typing your code here..."
-          className="code-editor-textarea w-full h-full block bg-inherit" // Ensure block display, inherit background
-          spellCheck="false" // Disable spellcheck for code
-          rows={10} // Initial rows, will adjust
-          style={{ minHeight: '200px' }} // Ensure minimum height
+          className="code-editor-textarea w-full h-full block bg-inherit"
+          spellCheck="false"
+          rows={10}
+          style={{ minHeight: '200px' }}
         />
-        {/* Suggestion Overlay - Will only show if suggestion state is populated manually */}
-        {suggestion && !isLoadingSuggestion && code.length > 0 && (
-          <div className="absolute left-2 right-2 bottom-2 p-2 bg-muted/80 backdrop-blur-sm text-muted-foreground rounded-md text-xs flex items-center justify-between animate-in fade-in duration-300"> {/* Added backdrop-blur and slight transparency */}
+        {suggestion && !isLoadingSuggestion && value.length > 0 && (
+          <div className="absolute left-2 right-2 bottom-2 p-2 bg-muted/80 backdrop-blur-sm text-muted-foreground rounded-md text-xs flex items-center justify-between animate-in fade-in duration-300">
              <span className="flex items-center">
               <Sparkles className="w-3 h-3 mr-1 text-primary" /> AI Suggestion: <code className="ml-1 font-mono bg-background/50 px-1 py-0.5 rounded">{suggestion}</code>
              </span>
             <span className="text-xs font-semibold">[Tab] to accept</span>
           </div>
         )}
-        {/* Loading Indicator - Will only show if isLoadingSuggestion is true (manual trigger) */}
-        {isLoadingSuggestion && code.length > 0 && (
-           <div className="absolute left-2 right-2 bottom-2 p-2 bg-muted/80 backdrop-blur-sm text-muted-foreground rounded-md text-xs flex items-center animate-in fade-in duration-300"> {/* Added backdrop-blur and slight transparency */}
+        {isLoadingSuggestion && value.length > 0 && (
+           <div className="absolute left-2 right-2 bottom-2 p-2 bg-muted/80 backdrop-blur-sm text-muted-foreground rounded-md text-xs flex items-center animate-in fade-in duration-300">
             <Loader2 className="w-3 h-3 mr-1 animate-spin" /> Fetching suggestion...
            </div>
         )}

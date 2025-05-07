@@ -27,11 +27,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark"> {/* Apply dark class globally */}
-      {/* Apply the font variables */}
+    <html lang="en" className="dark">{/* Apply dark class globally */}
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
-        <Toaster /> {/* Add Toaster for potential notifications */}
+        <Toaster />{/* Add Toaster for potential notifications */}
       </body>
     </html>
   );

@@ -6,9 +6,12 @@
   # Use https://search.nixos.org/packages to find packages
   packages = [
     pkgs.nodejs_20
+    pkgs.python310 # Changed from pkgs.python3 to pkgs.python310 as recommended by the environment
+    pkgs.docker
   ];
   # Sets environment variables in the workspace
   env = {};
+  services.docker.enable = true;
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
