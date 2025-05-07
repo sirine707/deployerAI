@@ -6,117 +6,7 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Galaxy Background */
-.galaxy-bg {
-  background-color: hsl(var(--background)); /* Base dark color */
-  background-image:
-    /* Vibrant Purple Nebula effect */
-    radial-gradient(ellipse at 30% 20%, hsla(280, 70%, 45%, 0.3) 0%, transparent 50%),
-    /* Vibrant Blue Nebula effect */
-    radial-gradient(ellipse at 70% 80%, hsla(230, 70%, 50%, 0.25) 0%, transparent 45%),
-    /* Star layer 1 (small stars) - Increased density */
-    radial-gradient(1px 1px at 10% 30%, white, transparent),
-    radial-gradient(1px 1px at 80% 10%, white, transparent),
-    radial-gradient(1px 1px at 50% 50%, white, transparent),
-    radial-gradient(1px 1px at 25% 75%, white, transparent),
-    radial-gradient(1px 1px at 90% 60%, white, transparent),
-    radial-gradient(1px 1px at 5% 95%, white, transparent),
-    radial-gradient(1px 1px at 65% 45%, white, transparent),
-    radial-gradient(1px 1px at 35% 85%, white, transparent),
-    radial-gradient(1px 1px at 15% 55%, white, transparent),
-    radial-gradient(1px 1px at 85% 35%, white, transparent),
-    /* Star layer 2 (slightly larger/brighter stars) */
-    radial-gradient(1.5px 1.5px at 40% 60%, hsla(0, 0%, 100%, 0.8), transparent),
-    radial-gradient(1.5px 1.5px at 60% 25%, hsla(0, 0%, 100%, 0.8), transparent),
-    radial-gradient(1.5px 1.5px at 15% 5%, hsla(0, 0%, 100%, 0.8), transparent),
-    radial-gradient(1.5px 1.5px at 85% 90%, hsla(0, 0%, 100%, 0.8), transparent);
-  background-size:
-    100% 100%, /* Nebulas */
-    100% 100%,
-    200px 200px, /* Small stars pattern size */
-    300px 300px,
-    250px 250px,
-    180px 180px,
-    220px 220px,
-    350px 350px,
-    150px 150px,
-    280px 280px,
-    190px 190px,
-    310px 310px,
-    500px 500px, /* Larger stars pattern size */
-    400px 400px,
-    600px 600px,
-    700px 700px;
-  background-position: /* Initial positions set by animation */
-    0% 0%, 0% 0%, 0px 0px, 50px 50px, 100px 100px, 150px 150px, 20px 80px, 70px 30px, 120px 180px, 180px 70px, 40px 140px, 90px 90px, 0px 0px, 200px 200px, 400px 100px, 100px 350px;
-  background-repeat: no-repeat, no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat;
-  background-attachment: fixed; /* Keep background fixed during scroll */
-  animation: floatingGalaxy 150s linear infinite; /* Slow floating animation */
-}
-
-
-@keyframes floatingGalaxy {
-  0% {
-    background-position:
-      0% 0%, /* Nebula 1 - static */
-      0% 0%, /* Nebula 2 - static */
-      0px 0px,    /* Star layer 1 */
-      50px 50px,   /* Star layer 2 */
-      100px 100px, /* Star layer 3 */
-      150px 150px, /* Star layer 4 */
-      20px 80px,   /* Star layer 5 */
-      70px 30px,   /* Star layer 6 */
-      120px 180px, /* Star layer 7 */
-      180px 70px,  /* Star layer 8 */
-      40px 140px,  /* Star layer 9 */
-      90px 90px,   /* Star layer 10 */
-      0px 0px,    /* Brighter Star 1 */
-      200px 200px, /* Brighter Star 2 */
-      400px 100px, /* Brighter Star 3 */
-      100px 350px; /* Brighter Star 4 */
-  }
-  50% {
-    background-position:
-      0% 0%, /* Nebula 1 - static */
-      0% 0%, /* Nebula 2 - static */
-      /* Move smaller stars faster/differently */
-      150px 50px,  /* Star layer 1 */
-      -50px 100px, /* Star layer 2 */
-      100px 200px, /* Star layer 3 */
-      50px -50px,  /* Star layer 4 */
-      120px 180px, /* Star layer 5 */
-      -30px 80px,  /* Star layer 6 */
-      220px 50px,  /* Star layer 7 */
-      80px 200px,  /* Star layer 8 */
-      140px 40px,  /* Star layer 9 */
-      190px 190px, /* Star layer 10 */
-      /* Move brighter stars slower/differently */
-      100px 100px, /* Brighter Star 1 */
-      300px 150px, /* Brighter Star 2 */
-      350px 300px, /* Brighter Star 3 */
-      200px 250px; /* Brighter Star 4 */
-  }
-  100% {
-    background-position: /* Return to initial state */
-      0% 0%,
-      0% 0%,
-      0px 0px,
-      50px 50px,
-      100px 100px,
-      150px 150px,
-      20px 80px,
-      70px 30px,
-      120px 180px,
-      180px 70px,
-      40px 140px,
-      90px 90px,
-      0px 0px,
-      200px 200px,
-      400px 100px,
-      100px 350px;
-  }
-}
-
+/* Removed Galaxy Background and its animation as FinisherHeader will handle it */
 
 @layer base {
   :root {
@@ -146,8 +36,8 @@ body {
     --chart-4-light: 43 74% 66%;
     --chart-5-light: 27 87% 67%;
 
-    /* Dark Theme (Default) - Adjusted for Galaxy */
-    --background: 240 10% 3.9%; /* Very dark blue/black */
+    /* Dark Theme (Default) - Adjusted for FinisherHeader background #201e30 */
+    --background: 248 20% 15%; /* hsl(248, 20%, 15%) which is #201e30 */
     --foreground: 0 0% 83.1%; /* #D4D4D4 */
     --card: 240 8% 8%; /* Slightly lighter dark blue for cards */
     --card-foreground: 0 0% 83.1%; /* #D4D4D4 */
@@ -184,7 +74,7 @@ body {
 
   /* Explicitly set dark mode variables if .dark class is present */
   .dark {
-    --background: 240 10% 3.9%; /* Very dark blue/black */
+    --background: 248 20% 15%; /* hsl(248, 20%, 15%) which is #201e30 */
     --foreground: 0 0% 83.1%; /* #D4D4D4 */
     --card: 240 8% 8%; /* Slightly lighter dark blue for cards */
     --card-foreground: 0 0% 83.1%; /* #D4D4D4 */
@@ -224,7 +114,7 @@ body {
     @apply border-border;
   }
   body {
-    @apply text-foreground galaxy-bg; /* Apply galaxy background */
+    @apply bg-background text-foreground; /* Use Tailwind's bg-background */
     /* Ensure dark theme is applied by default */
     color-scheme: dark;
   }

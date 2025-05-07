@@ -3,6 +3,7 @@ import type {Metadata} from 'next';
 import { Inter, Roboto_Mono } from 'next/font/google'; // Use standard Google Fonts
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster" // Import Toaster
+import FinisherHeaderClientComponent from '@/components/effects/finisher-header-client';
 
 // Use Inter for sans-serif, assign it to the --font-geist-sans variable
 const geistSans = Inter({
@@ -29,6 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">{/* Apply dark class globally */}
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
+        <FinisherHeaderClientComponent />
         {children}
         <Toaster />{/* Add Toaster for potential notifications */}
       </body>
