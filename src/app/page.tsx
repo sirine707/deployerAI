@@ -7,8 +7,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { LanguageSelector } from '@/components/language-selector';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Rocket } from 'lucide-react'; // Removed Dock and Cloud
-import { FaDocker, FaAws, FaGoogle } from "react-icons/fa"; // Imported react-icons
+import { Rocket } from 'lucide-react'; 
+import { FaDocker, FaAws, FaGoogle } from "react-icons/fa"; 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,14 +20,13 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const [codeContent, setCodeContent] = useState('');
   const [showPushPopup, setShowPushPopup] = useState(false);
-  const [targetRegistry, setTargetRegistry] = useState(''); // Keep this for now if needed later, but will use selectedRegistryType for push logic
+  const [targetRegistry, setTargetRegistry] = useState(''); 
   const [showDeployK8sButton, setShowDeployK8sButton] = useState(false);
-  const [selectedRegistryType, setSelectedRegistryType] = useState<'dockerhub' | 'gcr' | 'ecr' | null>(null); // New state for selected registry type
+  const [selectedRegistryType, setSelectedRegistryType] = useState<'dockerhub' | 'gcr' | 'ecr' | null>(null);
 
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
-  // Clear interval on component unmount
   useEffect(() => {
     return () => {
       if (progressIntervalRef.current) {
@@ -40,15 +39,14 @@ export default function Home() {
     setProgress(10);
     progressIntervalRef.current = setInterval(() => {
       setProgress((currentProgress) => {
-        const newProgress = currentProgress + 5; // Slower increment
-        // Stop simulating before 100, backend response will finalize
-        if (newProgress >= 95) { // Cap at 95%
+        const newProgress = currentProgress + 5; 
+        if (newProgress >= 95) { 
           clearInterval(progressIntervalRef.current!);
           return 95;
         }
         return newProgress;
       });
-    }, 200); // Faster interval for smoother simulation
+    }, 200); 
   };
 
   const stopProgressSimulation = () => {
@@ -59,12 +57,12 @@ export default function Home() {
 
   const handleDeploy = async () => {
     setIsBuilding(true);
-    setShowDeployK8sButton(false); // Hide K8s button on new deploy attempt
-    setShowPushPopup(false); // Hide push popup on new deploy attempt
+    setShowDeployK8sButton(false); 
+    setShowPushPopup(false); 
     startProgressSimulation();
-    setSelectedRegistryType(null); // Reset selected registry
+    setSelectedRegistryType(null); 
 
-    console.log('Starting deploy fetch...'); // Added log
+    console.log('Starting deploy fetch...'); 
     try {
       const response = await fetch('/api/deploy', {
         method: 'POST',
@@ -74,18 +72,17 @@ export default function Home() {
         body: JSON.stringify({ code: codeContent }),
       });
 
-      console.log('Deploy fetch finished, response.ok:', response.ok); // Added log
+      console.log('Deploy fetch finished, response.ok:', response.ok); 
 
-      // Stop simulation once response is received
       stopProgressSimulation();
-      setIsBuilding(false); // Building finished
+      setIsBuilding(false); 
 
       if (response.ok) {
         console.log('Build triggered successfully');
-        setProgress(100); // Finalize progress bar
-        console.log("Attempting to show push popup"); // Added log
-        setShowPushPopup(true); // Show push popup after successful build
-        console.log("showPushPopup state after setting:", true); // Added log
+        setProgress(100); 
+        console.log("Attempting to show push popup"); 
+        setShowPushPopup(true); 
+        console.log("showPushPopup state after setting:", true); 
         toast({
           title: "Build Successful",
           description: "Docker image built successfully.",
@@ -93,7 +90,7 @@ export default function Home() {
       } else {
         const errorText = await response.text();
         console.error('Failed to trigger build:', errorText);
-        setProgress(0); // Reset progress on failure
+        setProgress(0); 
         toast({
           title: "Build Failed",
           description: `Failed to build Docker image: ${errorText}`,
@@ -103,7 +100,7 @@ export default function Home() {
     } catch (error: any) {
       console.error('Error during build:', error);
       stopProgressSimulation();
-      setProgress(0); // Reset progress on error
+      setProgress(0); 
       setIsBuilding(false);
       toast({
         title: "Build Error",
@@ -113,7 +110,6 @@ export default function Home() {
     }
   };
 
-  // Modify handlePushImage to use selectedRegistryType
   const handlePushImage = async () => {
     if (!selectedRegistryType) {
         toast({
@@ -123,12 +119,11 @@ export default function Home() {
         });
         return;
     }
-    // Determine the actual registry path based on selection (this might need further input or configuration)
     let registryPath = '';
     switch(selectedRegistryType) {
-        case 'dockerhub': registryPath = 'docker.io/yourusername'; break; // Placeholder
-        case 'gcr': registryPath = 'gcr.io/your-project'; break; // Placeholder
-        case 'ecr': registryPath = 'aws_account_id.dkr.ecr.region.amazonaws.com'; break; // Placeholder
+        case 'dockerhub': registryPath = 'docker.io/yourusername'; break; 
+        case 'gcr': registryPath = 'gcr.io/your-project'; break; 
+        case 'ecr': registryPath = 'aws_account_id.dkr.ecr.region.amazonaws.com'; break; 
         default: registryPath = '';
     }
 
@@ -138,18 +133,15 @@ export default function Home() {
            description: `Please configure the actual path for ${selectedRegistryType.toUpperCase()}. (This is a placeholder).`,
            variant: "destructive",
          });
-         // For now, we'll stop here if not configured, but ideally, this would prompt for input
          return;
     }
 
     setIsPushing(true);
-    setShowPushPopup(false); // Hide popup
-    setProgress(0); // Reset progress for next step
+    setShowPushPopup(false); 
+    setProgress(0); 
 
     try {
-        // Assuming the image name is 'my-app' as used in backend example
         const imageName = 'my-app';
-        // Use the determined registryPath
         const response = await fetch('/api/push', {
             method: 'POST',
             headers: {
@@ -158,12 +150,12 @@ export default function Home() {
             body: JSON.stringify({ imageName, targetRegistry: registryPath }),
         });
 
-        setIsPushing(false); // Pushing finished
+        setIsPushing(false); 
 
         if (response.ok) {
             console.log('Image pushed successfully');
-            setProgress(100); // Finalize progress bar for push (optional, can be removed if push is fast)
-            setShowDeployK8sButton(true); // Show K8s deploy button
+            setProgress(100); 
+            setShowDeployK8sButton(true); 
              toast({
                title: "Push Successful",
                description: `Image pushed to ${registryPath}.`,
@@ -171,7 +163,7 @@ export default function Home() {
         } else {
             const errorText = await response.text();
             console.error('Failed to push image:', errorText);
-            setProgress(0); // Reset progress on failure
+            setProgress(0); 
              toast({
                title: "Push Failed",
                description: `Failed to push image: ${errorText}`,
@@ -181,7 +173,7 @@ export default function Home() {
     } catch (error: any) {
         console.error('Error during image push:', error);
         setIsPushing(false);
-        setProgress(0); // Reset progress on error
+        setProgress(0); 
          toast({
             title: "Push Error",
             description: `An error occurred during push: ${error.message || error}`,
@@ -192,7 +184,6 @@ export default function Home() {
 
   const handleDeployToKubernetes = () => {
       console.log('Deploying to Kubernetes...');
-      // TODO: Implement the API call to /api/deploy-k8s
        toast({
          title: "Kubernetes Deploy",
          description: "Simulating Kubernetes deployment. Backend not implemented yet.",
@@ -223,14 +214,12 @@ export default function Home() {
            </CardContent>
         </Card>
 
-        {/* Progress Bar */}
         {(isBuilding || isPushing) && (
           <div className="w-full mt-4">
              <Progress value={progress} className="w-full" />
           </div>
         )}
 
-        {/* Push Image Dialog */}
         <Dialog open={showPushPopup} onOpenChange={setShowPushPopup}>
             <DialogContent className="flex flex-col items-center justify-center text-center">
                 <DialogHeader>
@@ -239,42 +228,36 @@ export default function Home() {
                         Your Docker image has been built. Select a target registry to push the image.
                     </DialogDescription>
                 </DialogHeader>
-                {/* Registry Selection with Icons */}
                 <div className="flex justify-center gap-8 py-8">
-                    {/* Docker Hub */}
                     <div
                         className={`flex flex-col items-center cursor-pointer ${selectedRegistryType === 'dockerhub' ? 'text-blue-600' : 'text-muted-foreground'}`}
                         onClick={() => setSelectedRegistryType('dockerhub')}
                          style={{ color: selectedRegistryType === 'dockerhub' ? '#1D63ED' : undefined }}
                     >
-                        <FaDocker size={48} /> {/* Docker icon from react-icons */}
+                        <FaDocker size={48} /> 
                         <span className="mt-2 text-sm">Docker Hub</span>
                     </div>
-                    {/* GCR (Google Container Registry) */}
                     <div
                          className={`flex flex-col items-center cursor-pointer ${selectedRegistryType === 'gcr' ? 'text-blue-400' : 'text-muted-foreground'}`}
                          onClick={() => setSelectedRegistryType('gcr')}
                      >
-                         <FaGoogle size={48} /> {/* Google Cloud icon from react-icons */} 
+                         <FaGoogle size={48} />  
                          <span className="mt-2 text-sm">GCR</span>
                     </div>
-                     {/* ECR (Elastic Container Registry) */}
                      <div
                          className={`flex flex-col items-center cursor-pointer ${selectedRegistryType === 'ecr' ? 'text-orange-500' : 'text-muted-foreground'}`}
                          onClick={() => setSelectedRegistryType('ecr')}
                      >
-                         <FaAws size={48} /> {/* AWS icon from react-icons */} 
+                         <FaAws size={48} />  
                          <span className="mt-2 text-sm">ECR</span>
                      </div>
                 </div>
                 <DialogFooter className="w-full flex justify-end">
-                    {/* Changed button text to Next */}
                     <Button onClick={handlePushImage} disabled={!selectedRegistryType}>Next</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
 
-        {/* Deploy to Kubernetes Button */}
         {showDeployK8sButton && (
             <div className="w-full mt-4 text-center">
                 <Button onClick={handleDeployToKubernetes} className="px-8 py-2">
@@ -284,7 +267,7 @@ export default function Home() {
         )}
 
         <footer className="mt-8 text-center text-muted-foreground text-sm">
-          Powered by Generative AI
+          Powered by DeployerAI
         </footer>
       </div>
     </main>

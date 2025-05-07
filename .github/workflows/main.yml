@@ -1,0 +1,80 @@
+# This workflow builds and pushes a Docker image to Docker Hub.
+# It is triggered on pushes to the main or master branch.
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-and-push-docker-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Or the Node.js version your project uses
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys:
+            ${{ runner.os }}-node-
+
+      - name: Install Frontend Dependencies
+        run: npm ci
+
+      # Add frontend test step here if you have one
+      # - name: Run Frontend Tests
+      #   run: npm test
+
+      - name: Build Frontend
+        run: npm run build
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9' # Or the Python version your project uses
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Cache Poetry virtual environment
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+          restore-keys:
+            ${{ runner.os }}-poetry-
+
+      - name: Install Backend Dependencies
+        run: poetry install --no-root --no-dev
+
+      # Add backend test step here if you have one
+      # - name: Run Backend Tests
+      #   run: poetry run pytest # Example for pytest
+      #   working-directory: ./src/ai/agents # Example if tests are in this dir
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build Docker image
+        run: docker build . --tag sirine707/deployerAI:latest
+
+      - name: Push Docker image
+        run: docker push sirine707/deployerAI:latest
+
+      # Add deployment step here (e.g., to Kubernetes, Cloud Run, etc.)
+      # This will be highly dependent on your chosen deployment environment

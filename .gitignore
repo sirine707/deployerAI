@@ -1,0 +1,32 @@
+# Ignore Node.js dependencies
+node_modules/
+
+# Ignore Python bytecode
+__pycache__/
+
+# Ignore Next.js build directory
+.next/
+
+# Ignore environment variables file
+.env
+.env.local
+
+# Ignore logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore OS generated files
+.DS_Store
+thumbs.db
+
+# Ignore IDE specific files (optional, depends on team preference)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+.idx
+.modified
