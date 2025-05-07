@@ -288,8 +288,8 @@ export default function Home() {
         </Sidebar>
 
         <SidebarInset>
-          <main className="flex flex-col items-center p-4 md:p-12 w-full h-full overflow-auto">
-            <div className="w-full max-w-4xl relative">
+          <main className="flex flex-col items-center w-full h-full overflow-auto"> {/* Removed padding */}
+            <div className="w-full max-w-4xl relative mt-16 md:mt-12"> {/* Added margin-top for spacing */}
               <div className="absolute top-0 right-0 z-10 flex items-center space-x-2 mb-4">
                 <SidebarTrigger className="md:hidden" /> {/* Mobile trigger */}
                 <LanguageSelector />
@@ -303,9 +303,7 @@ export default function Home() {
                 </Button>
               </div>
 
-              {/* Title removed as per request */}
-
-              <Card className={`w-full border-accent bg-card/80 backdrop-blur-sm ${showPushPopup ? 'shadow-2xl' : 'shadow-lg'} mt-16 md:mt-12`}>
+              <Card className={`w-full border-accent bg-card/80 backdrop-blur-sm ${showPushPopup ? 'shadow-2xl' : 'shadow-lg'}`}> {/* Removed mt-16 md:mt-12, handled by parent div */}
                  <CardContent className="p-0">
                     <CodeEditor value={codeContent} onValueChange={setCodeContent} />
                  </CardContent>
