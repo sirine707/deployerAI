@@ -7,7 +7,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { LanguageSelector } from '@/components/language-selector';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Rocket, Dock, BotMessageSquare } from 'lucide-react'; // Changed Docker to Dock
+import { Rocket } from 'lucide-react'; // Removed Dock and Cloud
+import { FaDocker, FaAws, FaGoogle } from "react-icons/fa"; // Imported react-icons
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -244,16 +245,17 @@ export default function Home() {
                     <div
                         className={`flex flex-col items-center cursor-pointer ${selectedRegistryType === 'dockerhub' ? 'text-blue-600' : 'text-muted-foreground'}`}
                         onClick={() => setSelectedRegistryType('dockerhub')}
+                         style={{ color: selectedRegistryType === 'dockerhub' ? '#1D63ED' : undefined }}
                     >
-                        <Dock size={48} /> {/* Changed Docker to Dock */}
+                        <FaDocker size={48} /> {/* Docker icon from react-icons */}
                         <span className="mt-2 text-sm">Docker Hub</span>
                     </div>
                     {/* GCR (Google Container Registry) */}
                     <div
                          className={`flex flex-col items-center cursor-pointer ${selectedRegistryType === 'gcr' ? 'text-blue-400' : 'text-muted-foreground'}`}
                          onClick={() => setSelectedRegistryType('gcr')}
-                    >
-                         <BotMessageSquare size={48} /> {/* Using a placeholder icon */} 
+                     >
+                         <FaGoogle size={48} /> {/* Google Cloud icon from react-icons */} 
                          <span className="mt-2 text-sm">GCR</span>
                     </div>
                      {/* ECR (Elastic Container Registry) */}
@@ -261,7 +263,7 @@ export default function Home() {
                          className={`flex flex-col items-center cursor-pointer ${selectedRegistryType === 'ecr' ? 'text-orange-500' : 'text-muted-foreground'}`}
                          onClick={() => setSelectedRegistryType('ecr')}
                      >
-                         <BotMessageSquare size={48} /> {/* Using a placeholder icon */} 
+                         <FaAws size={48} /> {/* AWS icon from react-icons */} 
                          <span className="mt-2 text-sm">ECR</span>
                      </div>
                 </div>
