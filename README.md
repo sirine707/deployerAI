@@ -1,11 +1,16 @@
 # Code Weaver
 
-Code Weaver is an AI-powered code editor built with Next.js. It provides a simple interface for writing and editing code with the assistance of an AI autocomplete feature.
+Code Weaver is an AI-powered code editor built with Next.js. It provides a simple interface for writing and editing code with advanced AI assistance and seamless integration for deployment.
 
 ## Features
 
-*   Code Editor with syntax highlighting
-*   Integration with Docker and container registries (Docker Hub, GCR, ECR) for deployment
+*   **AI Coding Assistance:** Leverages advanced AI models (unified with Gemini in Firebase and enhanced for task-specific model selection) to provide intelligent code completion and suggestions.
+*   **Multimodal Prompting & App Prototyping:** Supports natural language, images, and drawing tools, featuring an App Prototyping agent capable of generating full-stack applications (initially Next.js).
+*   **Enhanced Firebase Integration:** Deep integration with Firebase services, including publishing web apps to Firebase App Hosting and building AI flows/RAG with Genkit.
+*   **Integration with Docker and Container Registries:** Supports deployment to various container registries (Docker Hub, GCR, ECR).
+*   **Improved Performance:** Optimized for faster load and build times.
+*   **More Customization Options:** Provides enhanced customization for the development environment.
+*   Code Editor with syntax highlighting.
 
 ## Technologies
 
@@ -16,6 +21,9 @@ Code Weaver is an AI-powered code editor built with Next.js. It provides a simpl
 *   react-icons (for icons)
 *   Python (for the backend AI agents)
 *   Docker
+*   Firebase
+*   Genkit
+*   Gemini API
 
 ## Getting Started
 
