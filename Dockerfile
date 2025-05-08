@@ -19,7 +19,7 @@ RUN pip install poetry
 # Copy Python dependency files and install dependencies using Poetry
 # Make sure you have run 'poetry install' locally to generate poetry.lock
 COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-root --no-dev
+RUN poetry install --no-root
 
 # Copy the rest of the application code
 COPY . .
